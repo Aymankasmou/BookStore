@@ -1,0 +1,263 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Nouvil</title>
+  <link rel="stylesheet" href="{% static 'plugins/fontawesome-free/css/all.min.css' %}">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="{% static 'plugins/jquery_datepacker/jquery_ui.css' %}">
+  <!-- IonIcons -->
+  <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css' %}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'dist/css/adminlte_ar.min.css' %}">
+  <!-- Google Font: Source Sans Pro -->
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+
+<body dir="rtl" class="hold-transition sidebar-mini">
+
+  {% include 'parts/nav.html' %}
+  {% include 'parts/sidebar.html' %}
+  {% block content %}
+
+
+
+  {% endblock %}
+  {% include 'parts/footer.html' %}
+
+  </div>
+  <!-- ./wrapper -->
+
+
+
+  <!-- REQUIRED SCRIPTS -->
+  <script src="{% static 'plugins/jquery_datepacker/jquery_ui.js'  %}"></script>
+
+  <!-- jQuery -->
+  <script src="{% static 'plugins/jquery/jquery.min.js'  %}"></script>
+  <!-- Bootstrap -->
+  <script src="{% static 'plugins/bootstrap/js/bootstrap.bundle.min.js'  %}"></script>
+  <!-- AdminLTE -->
+  <script src="{% static 'dist/js/adminlte.js'  %}"></script>
+  <!-- OPTIONAL SCRIPTS -->
+
+  <script src="{% static 'plugins/chart.js/Chart.min.js'  %}"></script>
+
+  <script src="{% static 'dist/js/demo.js'  %}"></script>
+  <!--<script src="{% static 'dist/js/pages/dashboard3.js'"></script>
+-->
+  <script>
+
+
+    $(document).ready(function(){    //27
+      var total = 0;
+      $('.totalprice').each(function(){    //27
+        $(this).hide()   //27
+        var salary = $(this).text()  //27
+        total += parseInt(salary)   //27
+      });
+      $("#totalsalarys").text($("#totalsalarys").text()+total)    //27
+    });
+
+
+
+    var total1 = 0;    //28
+    $(".totalrental").each(function(){    //28
+      $(this).hide()    //28
+      var salary1 = $(this).text()    //28
+      total1 += parseInt(salary1)    //28
+    });
+    $(".salaryrental").text(total1)    //28
+    $(".salaryrental").hide()    //28
+
+
+    var total2 = 0;    //28
+    $(".totalsold").each(function(){    //28
+      $(this).hide()    //28
+      var salary2 = $(this).text()    //28
+      total2 += parseInt(salary2)    //28
+    });
+    $(".salarysold").text(total2)    //28
+    $(".salarysold").hide()    //28
+
+
+
+    $("#rentaldays").keyup(function(){  //26
+      $("#totalrental").val($("#rentaldays").val()*$("#rentalprice").val())  //26
+    });  //26
+
+
+
+    $("#catinput").hide(); //21
+    $("#addcat").click(function () { //21
+      
+      $("#catinput").show(); //21
+    });
+    $("#backcat").click(function () {//21
+      $("#catinput").hide(); //21
+    }); //21
+
+
+
+    {% for book in books %}        //24
+    $(".cat{{book.Category.id}}").click(function () {        //24
+      $(".bookhide").hide()         //24
+      $(".book{{book.Category.id}}").show()       //24
+    }); 
+
+
+
+    $(".status{{book.status}}").click(function () {       //24
+      $(".bookhide").hide()         //24
+      $(".book{{book.status}}").show()       //24
+    });
+    {% endfor %}                //24
+
+  </script>
+
+
+  <script>
+    $(document).ready(function () {
+      $("#myModal").on("shown.bs.modal", function () {
+        $("#myInput").trigger("focus");
+      });
+      /*here i will make loop for get id category and status for contact with books */
+      /*حساب اجمالي الارباح و هي عبارة عن حاصل جمع سعر الكتب عند البيع بالاضافة الى سعر استعارة الكتاب*/
+    });
+  </script>
+
+
+
+  <script>
+    $(function () {
+      "use strict";
+
+      var ticksStyle = {
+        fontColor: "#495057",
+        fontStyle: "bold",
+      };
+
+      var mode = "index";
+      var intersect = true;
+
+      var $salesChart = $("#sales-chart");
+
+      var salesChart = new Chart($salesChart, {
+        type: "bar",
+
+        data: {
+          labels: ["تفاصيل الارباح"],
+
+          datasets: [
+            {
+              backgroundColor: "#007bff",
+              borderColor: "#007bff",
+              data: [$(".salarysold").text()],     //28
+            },
+            {
+              backgroundColor: "#ced4da",
+              borderColor: "#ced4da",
+              data: [$(".salaryrental").text()],     //28
+            },
+          ],
+        },
+
+        options: {
+          maintainAspectRatio: false,
+          tooltips: {
+            mode: mode,
+            intersect: intersect,
+          },
+          hover: {
+            mode: mode,
+            intersect: intersect,
+          },
+          legend: {
+            display: false,
+          },
+          scales: {
+            yAxes: [
+              {
+                // display: false,
+                gridLines: {
+                  display: true,
+                  lineWidth: "4px",
+                  color: "rgba(0, 0, 0, .2)",
+                  zeroLineColor: "transparent",
+                },
+                ticks: $.extend(
+                  {
+                    beginAtZero: true,
+
+                    // Include a dollar sign in the ticks
+                    callback: function (value, index, values) {
+                      if (value >= 1000) {
+                        value /= 1000;
+                        value += "k";
+                      }
+                      return "$" + value;
+                    },
+                  },
+                  ticksStyle
+                ),
+              },
+            ],
+            xAxes: [
+              {
+                display: true,
+                gridLines: {
+                  display: false,
+                },
+                ticks: ticksStyle,
+              },
+            ],
+          },
+        },
+      });
+
+
+      var pieChart = document
+        .getElementById("visitors-chart")
+        .getContext("2d");
+
+      var myPieChart = new Chart(pieChart, {
+        type: "pie",
+        data: {
+          datasets: [
+            {
+              data: ["{{bookavailble}}", "{{booksold}}", "{{bookrental}}"], //s25 {{bookavailble}}{{booksold}}{{bookrental}}
+              backgroundColor: ["#27c100", "#f3545d", "#fdaf4b"],
+              borderWidth: 10,
+            },
+          ],
+          labels: ["Available", "Sold", "Rented"],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          legend: {
+            position: "bottom",
+            labels: {
+              fontColor: "#000",
+              fontSize: 15,
+              usePointStyle: true,
+              padding: 30,
+            },
+          },
+          pieceLabel: {
+            render: "percentage",
+            fontColor: "white",
+            fontSize: 14,
+          },
+        },
+      });
+    });
+  </script>
+</body>
+
+</html>
